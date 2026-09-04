@@ -8,6 +8,7 @@ The structure follows common Java conventions while remaining flexible for Andro
 
 ## 🧱 High-Level Structure
 
+```
 paradox-log/
 ├── app/
 ├── core/
@@ -20,11 +21,13 @@ paradox-log/
 ├── assets/
 ├── tests/
 └── docs/
+```
 
 ---
 
 ## 📱 app/
 
+```
 paradox-log/
 └── app/
     ├── MainApplication.java
@@ -32,11 +35,13 @@ paradox-log/
     └── platform/
         ├── android/
         └── ios/
+```
 
 ---
 
 ## 🧠 core/
 
+```
 paradox-log/
 └── core/
     ├── GameState.java
@@ -48,11 +53,13 @@ paradox-log/
         ├── Perspective.java
         ├── AnomalyType.java
         └── ToolType.java
+```
 
 ---
 
 ## 📚 data/
 
+```
 paradox-log/
 └── data/
     ├── acts/
@@ -68,11 +75,13 @@ paradox-log/
     ├── anomalies/
     ├── tools/
     └── endings/
+```
 
 ---
 
 ## ⚙ engine/
 
+```
 paradox-log/
 └── engine/
     ├── ActManager.java
@@ -83,11 +92,13 @@ paradox-log/
     └── anomaly/
         ├── AnomalyProcessor.java
         └── AnomalyRules.java
+```
 
 ---
 
 ## 🖥 ui/
 
+```
 paradox-log/
 └── ui/
     ├── TextRenderer.java
@@ -97,67 +108,80 @@ paradox-log/
     └── theme/
         ├── Colors.java
         └── Fonts.java
+```
 
 ---
 
 ## 💾 save/
 
+```
 paradox-log/
 └── save/
     ├── SaveManager.java
     ├── SaveSlot.java
     ├── SaveSerializer.java
     └── SaveValidator.java
+```
 
 ---
 
 ## 🧪 config/
 
+```
 paradox-log/
 └── config/
     ├── GameConstants.java
     ├── BalanceRules.java
     └── FeatureFlags.java
+```
 
 ---
 
 ## 🛠 util/
 
+```
 paradox-log/
 └── util/
     ├── Logger.java
     ├── JsonLoader.java
     ├── TimeUtils.java
     └── ValidationUtils.java
+```
 
 ---
 
 ## 🧪 tests/
 
+```
 paradox-log/
 └── tests/
     ├── engine/
     ├── save/
     ├── state/
     └── ui/
+```
 
 ---
 
 ## 🎨 assets/
 
+```
 paradox-log/
 └── assets/
     ├── fonts/
     ├── icons/
     └── sounds/
+```
 
 ---
 
 ## 📄 docs/
 
+```
 paradox-log/
 └── docs/
     ├── README.md
     ├── GAME_DESIGN.md
     ├── TECHNICAL_OVERVIEW.md
     └── JAVA_PROJECT_STRUCTURE.md
+```

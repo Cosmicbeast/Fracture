@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Built artifacts
 build/
 bin/
@@ -42,3 +43,7 @@ Thumbs.db
 
 # Local configuration
 google-services.json
+=======
+msg.txt
+architecture_details.md
+>>>>>>> 33b949ee471b8d1e27dd06f0896c7d8660b62573

@@ -1,0 +1,44 @@
+# Built artifacts
+build/
+bin/
+out/
+
+# Gradle files
+.gradle/
+local.properties
+
+# Android Studio / IntelliJ IDEA files
+.idea/
+*.iml
+*.iws
+*.ipr
+captures/
+.externalNativeBuild/
+.cxx/
+cmake-build-*/
+
+# Gradle specific
+gradle-app.setting
+!gradle-wrapper.jar
+.gradle
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Signing files
+*.jks
+*.keystore
+*.pk8
+*.pem
+
+# Local configuration
+google-services.json

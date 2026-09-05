@@ -1,0 +1,1 @@
+C:\Users\cosmi\.konan\kotlin-native-prebuilt-windows-x86_64-2.4.10\klib\commonized\2.4.10

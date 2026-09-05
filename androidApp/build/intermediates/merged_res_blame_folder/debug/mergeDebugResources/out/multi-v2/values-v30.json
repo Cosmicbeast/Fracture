@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "org.example.project.androidApp-mergeDebugResources-34:/values-v30/values-v30.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\cosmi\\.gradle\\caches\\9.1.0\\transforms\\1316d700096c980e1c8726f79ec1a4a1\\workspace\\transformed\\material3\\res\\values-v30\\values-v30.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "72",
+                        "endOffsets": "123"
+                    }
+                }
+            ]
+        }
+    ]
+}

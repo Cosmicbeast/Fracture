@@ -14,7 +14,10 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
-/build
+build/
+*/build/
+.kotlin/
+*.zip
 /captures
 .externalNativeBuild
 .cxx

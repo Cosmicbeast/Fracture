@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun TypewriterText(
@@ -20,7 +21,7 @@ fun TypewriterText(
     style: TextStyle = LocalTextStyle.current,
     color: Color = Color.Unspecified,
     typingSpeedMs: Long = 20L,
-    onTypingComplete: () -> Unit = {}
+    onTypingComplete: () -> Unit = {},
 ) {
     var textToDisplay by remember(text) { mutableStateOf("") }
 
@@ -28,7 +29,7 @@ fun TypewriterText(
         textToDisplay = ""
         for (i in text.indices) {
             textToDisplay += text[i]
-            delay(typingSpeedMs)
+            delay(typingSpeedMs.milliseconds)
         }
         onTypingComplete()
     }
@@ -37,6 +38,6 @@ fun TypewriterText(
         text = textToDisplay,
         modifier = modifier,
         style = style,
-        color = color
+        color = color,
     )
 }

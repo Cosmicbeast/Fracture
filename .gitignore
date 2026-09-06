@@ -15,7 +15,9 @@
 /.idea/assetWizardSettings.xml
 .DS_Store
 build/
-*/build/
+**/build/
+.gradle/
+**/.gradle/
 .kotlin/
 *.zip
 /captures

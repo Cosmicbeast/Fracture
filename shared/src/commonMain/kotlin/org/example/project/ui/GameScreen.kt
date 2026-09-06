@@ -19,13 +19,13 @@ fun GameScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Image(
             painter = painterResource(Res.drawable.scene_1_sky),
             contentDescription = "The Sky That Never Heals",
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop // Crop to fill the entire screen, or use Fit to show full image
+            contentScale = ContentScale.Crop, // Crop to fill the entire screen, or use Fit to show full image
         )
     }
 }

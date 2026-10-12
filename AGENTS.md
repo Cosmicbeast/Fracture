@@ -322,6 +322,11 @@ Always consult these before making major design decisions:
 5. **Branch**: `Production` (main branch)
 6. **Commit style**: Conventional commits (`feat:`, `fix:`, `chore:`, `refactor:`)
 
+### 🪟 Windows Development & Android Execution Guidelines
+- Suppress disabled macOS native test tasks on Windows hosts with `kotlin.native.ignoreDisabledTargets=true` in `gradle.properties`.
+- Before running `:androidApp:installDebug`, verify connected devices with `adb devices`.
+- If no devices are active, recommend launching Android Studio (`D:\app\Android studio\`) or launching the configured AVD (`Medium_Phone`) using `-gpu swiftshader_indirect`.
+
 ---
 
 ## 🎯 Current Priority

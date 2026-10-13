@@ -1,0 +1,25 @@
+{
+  "variables": [
+    {
+      "key": "tyrantIndex",
+      "name": "Tyrant Index",
+      "description": "Measurement of authoritarian decisions and ruthlessness",
+      "type": "integer",
+      "defaultValue": 0
+    },
+    {
+      "key": "timelineStability",
+      "name": "Timeline Stability",
+      "description": "Integrity metric of active temporal reality",
+      "type": "integer",
+      "defaultValue": 100
+    },
+    {
+      "key": "selfTrust",
+      "name": "Self-Trust",
+      "description": "Character internal coherence and psychological alignment",
+      "type": "integer",
+      "defaultValue": 50
+    }
+  ]
+}

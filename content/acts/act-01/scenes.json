@@ -1,0 +1,94 @@
+[
+  {
+    "id": "scene-01-01",
+    "actId": "act-01",
+    "title": "Core Breach Alert",
+    "dialogues": [
+      {
+        "id": "d-1",
+        "speaker": "Automated Telemetry",
+        "text": "WARNING: Temporal containment flux detected in Sector 0. Causal shear exceeding 40 millichrons."
+      },
+      {
+        "id": "d-2",
+        "speaker": "Past Self",
+        "text": "The containment ring is vibrating violently. The terminal is receiving an encrypted transmission signed with my own biometrics."
+      },
+      {
+        "id": "d-3",
+        "speaker": "Encrypted Transmission",
+        "text": "Execute the emergency lockdown immediately. Do not hesitate. If you delay, the breach propagates forward."
+      }
+    ],
+    "choices": [
+      {
+        "id": "choice-01-lockdown",
+        "text": "Execute immediate quarantine lockdown",
+        "targetSceneId": "scene-01-02",
+        "condition": null,
+        "consequence": {
+          "tyrantIndexDelta": 5,
+          "timelineStabilityDelta": 10,
+          "selfTrustDelta": -5,
+          "setFlags": ["quarantine_enforced"],
+          "clearFlags": [],
+          "addedItems": [],
+          "removedItems": [],
+          "nextActId": null
+        }
+      },
+      {
+        "id": "choice-01-evacuate",
+        "text": "Delay lockdown and initiate personnel evacuation",
+        "targetSceneId": "scene-01-03",
+        "condition": null,
+        "consequence": {
+          "tyrantIndexDelta": -5,
+          "timelineStabilityDelta": -10,
+          "selfTrustDelta": 5,
+          "setFlags": ["staff_evacuated"],
+          "clearFlags": [],
+          "addedItems": [],
+          "removedItems": [],
+          "nextActId": null
+        }
+      }
+    ]
+  },
+  {
+    "id": "scene-01-02",
+    "actId": "act-01",
+    "title": "Containment Sealed",
+    "dialogues": [
+      {
+        "id": "d-4",
+        "speaker": "Past Self",
+        "text": "The blast doors slam shut with finality. The telemetry stabilizes, but the silence from the inner ring is deafening."
+      },
+      {
+        "id": "d-5",
+        "speaker": "Terminal Log",
+        "text": "Quarantine established. Causal wave contained. Timeline anchor holding at 95%."
+      }
+    ],
+    "choices": []
+  },
+  {
+    "id": "scene-01-03",
+    "actId": "act-01",
+    "title": "Evacuation Corridor",
+    "dialogues": [
+      {
+        "id": "d-6",
+        "speaker": "Past Self",
+        "text": "Sirens wail through the transit tunnels. Colleagues flee toward the surface lifts as temporal tremors fracture the floor beneath our feet."
+      },
+      {
+        "id": "d-7",
+        "speaker": "Terminal Log",
+        "text": "Containment delayed. Unstable temporal echo recorded. Timeline anchor degraded to 75%."
+      }
+    ],
+    "choices": []
+  }
+]

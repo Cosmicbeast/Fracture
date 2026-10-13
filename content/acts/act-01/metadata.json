@@ -1,0 +1,12 @@
+{
+  "id": "act-01",
+  "actNumber": 1,
+  "title": "Act I: The Consequence",
+  "description": "Sector 0 Chrono-Facility. Hours prior to initial breach.",
+  "initialSceneId": "scene-01-01",
+  "sceneIds": [
+    "scene-01-01",
+    "scene-01-02",
+    "scene-01-03"
+  ]
+}

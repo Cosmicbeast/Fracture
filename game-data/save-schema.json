@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GameStateSaveSchema",
+  "description": "Canonical schema for Paradox Log runtime game state persistence",
+  "type": "object",
+  "required": [
+    "version",
+    "currentActId",
+    "currentSceneId",
+    "variables",
+    "flags",
+    "inventory",
+    "timeline",
+    "ending"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "description": "Save state format schema version"
+    },
+    "currentActId": {
+      "type": "string",
+      "description": "Identifier of the currently active narrative act"
+    },
+    "currentSceneId": {
+      "type": "string",
+      "description": "Identifier of the currently active narrative scene"
+    },
+    "variables": {
+      "type": "object",
+      "required": [
+        "tyrantIndex",
+        "timelineStability",
+        "selfTrust"
+      ],
+      "properties": {
+        "tyrantIndex": {
+          "type": "integer",
+          "description": "Measurement of authoritarian decisions and ruthlessness"
+        },
+        "timelineStability": {
+          "type": "integer",
+          "description": "Integrity metric of active temporal reality (0 to 100)"
+        },
+        "selfTrust": {
+          "type": "integer",
+          "description": "Character internal coherence and psychological alignment"
+        }
+      }
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Active persistent narrative flags"
+    },
+    "inventory": {
+      "type": "object",
+      "required": [
+        "itemIds"
+      ],
+      "properties": {
+        "itemIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Identifiers of acquired items"
+        }
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "required": [
+        "actsCompleted",
+        "visitedScenes",
+        "decisionsMade"
+      ],
+      "properties": {
+        "actsCompleted": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "visitedScenes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "decisionsMade": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Map of sceneId to choiceId decisions"
+        }
+      }
+    },
+    "ending": {
+      "type": "object",
+      "required": [
+        "isResolved"
+      ],
+      "properties": {
+        "eligibleEnding": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "isResolved": {
+          "type": "boolean"
+        },
+        "endingSceneId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

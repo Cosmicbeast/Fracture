@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,9 +18,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -76,364 +79,595 @@ fun SystemScreen(
     var textSizeIndex by remember { mutableIntStateOf(1) } // 0: Small, 1: Medium, 2: Large
     var vibrationEnabled by remember { mutableStateOf(true) }
 
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     Surface(
         color = ParadoxColorBackground,
         modifier = modifier
             .fillMaxSize()
-            .statusBarsPadding()
+            .safeDrawingPadding()
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp, vertical = 12.dp)
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
         ) {
-            // 1. iOS Top Navigation Bar
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .widthIn(max = 840.dp)
+                    .padding(
+                        horizontal = if (isLandscape) 28.dp else 20.dp,
+                        vertical = if (isLandscape) 8.dp else 12.dp
+                    )
             ) {
-                // Left: iOS Back Action
+                // 1. iOS Top Navigation Bar
                 Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = if (isLandscape) 4.dp else 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .clickable(onClick = onNavigateBack)
-                        .padding(vertical = 6.dp, horizontal = 4.dp)
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
-                        text = "‹",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Light,
-                        color = ParadoxColorStabilityCyan
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "Menu",
-                        fontSize = 15.sp,
-                        color = ParadoxColorStabilityCyan,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-
-                // Center Title
-                Text(
-                    text = UiLabels.LABEL_SYSTEM_ARCHIVES,
-                    style = ParadoxTypography.labelLarge,
-                    color = ParadoxColorTextPrimary,
-                    letterSpacing = 2.sp,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                // Balanced empty spacer
-                Spacer(modifier = Modifier.width(48.dp))
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // 2. iOS Segmented Control (Pill switcher)
-            Surface(
-                shape = RoundedCornerShape(20.dp),
-                color = Color(0x14FFFFFF),
-                border = BorderStroke(0.5.dp, Color(0x3338BDF8)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(3.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Segment 1: TIMELINE ARCHIVE
-                    val isArchiveActive = selectedTab == 0
-                    Box(
+                    // Left: iOS Back Action
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .weight(1f)
-                            .fillMaxSize()
-                            .background(
-                                color = if (isArchiveActive) Color(0x3300E5FF) else Color.Transparent,
-                                shape = RoundedCornerShape(18.dp)
-                            )
-                            .clickable { selectedTab = 0 },
-                        contentAlignment = Alignment.Center
+                            .clickable(onClick = onNavigateBack)
+                            .padding(vertical = 6.dp, horizontal = 4.dp)
                     ) {
                         Text(
-                            text = "TIMELINE LOG",
-                            fontSize = 12.sp,
-                            fontWeight = if (isArchiveActive) FontWeight.SemiBold else FontWeight.Medium,
-                            color = if (isArchiveActive) Color.White else ParadoxColorTextSecondary,
-                            letterSpacing = 1.sp
+                            text = "‹",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Light,
+                            color = ParadoxColorStabilityCyan
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Menu",
+                            fontSize = 15.sp,
+                            color = ParadoxColorStabilityCyan,
+                            fontWeight = FontWeight.Medium
                         )
                     }
 
-                    // Segment 2: PREFERENCES
-                    val isPrefActive = selectedTab == 1
-                    Box(
+                    // Center Title
+                    Text(
+                        text = UiLabels.LABEL_SYSTEM_ARCHIVES,
+                        style = ParadoxTypography.labelLarge,
+                        color = ParadoxColorTextPrimary,
+                        letterSpacing = 2.sp,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+
+                    // Balanced empty spacer
+                    Spacer(modifier = Modifier.width(48.dp))
+                }
+
+                Spacer(modifier = Modifier.height(if (isLandscape) 8.dp else 12.dp))
+
+                // 2. iOS Segmented Control (Pill switcher)
+                Surface(
+                    shape = RoundedCornerShape(20.dp),
+                    color = Color(0x14FFFFFF),
+                    border = BorderStroke(0.5.dp, Color(0x3338BDF8)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(38.dp)
+                ) {
+                    Row(
                         modifier = Modifier
-                            .weight(1f)
                             .fillMaxSize()
-                            .background(
-                                color = if (isPrefActive) Color(0x3300E5FF) else Color.Transparent,
-                                shape = RoundedCornerShape(18.dp)
-                            )
-                            .clickable { selectedTab = 1 },
-                        contentAlignment = Alignment.Center
+                            .padding(3.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "PREFERENCES",
-                            fontSize = 12.sp,
-                            fontWeight = if (isPrefActive) FontWeight.SemiBold else FontWeight.Medium,
-                            color = if (isPrefActive) Color.White else ParadoxColorTextSecondary,
-                            letterSpacing = 1.sp
-                        )
+                        // Segment 1: TIMELINE ARCHIVE
+                        val isArchiveActive = selectedTab == 0
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxSize()
+                                .background(
+                                    color = if (isArchiveActive) Color(0x3300E5FF) else Color.Transparent,
+                                    shape = RoundedCornerShape(18.dp)
+                                )
+                                .clickable { selectedTab = 0 },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "TIMELINE LOG",
+                                fontSize = 12.sp,
+                                fontWeight = if (isArchiveActive) FontWeight.SemiBold else FontWeight.Medium,
+                                color = if (isArchiveActive) Color.White else ParadoxColorTextSecondary,
+                                letterSpacing = 1.sp
+                            )
+                        }
+
+                        // Segment 2: PREFERENCES
+                        val isPrefActive = selectedTab == 1
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxSize()
+                                .background(
+                                    color = if (isPrefActive) Color(0x3300E5FF) else Color.Transparent,
+                                    shape = RoundedCornerShape(18.dp)
+                                )
+                                .clickable { selectedTab = 1 },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "PREFERENCES",
+                                fontSize = 12.sp,
+                                fontWeight = if (isPrefActive) FontWeight.SemiBold else FontWeight.Medium,
+                                color = if (isPrefActive) Color.White else ParadoxColorTextSecondary,
+                                letterSpacing = 1.sp
+                            )
+                        }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(18.dp))
+                Spacer(modifier = Modifier.height(if (isLandscape) 12.dp else 18.dp))
 
-            // 3. Animated Section Body
-            AnimatedContent(
-                targetState = selectedTab,
-                transitionSpec = { fadeIn() togetherWith fadeOut() },
-                label = "SystemTabTransition"
-            ) { tab ->
-                if (tab == 0) {
-                    // TAB 0: TIMELINE ARCHIVE CONTENT
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(18.dp)
-                    ) {
-                        // Section Header
-                        IosSectionHeader(title = "TIMELINE METRICS")
-
-                        // Inset Grouped Card: Variables
-                        IosGroupedCard {
-                            IosMetricRow(
-                                label = UiLabels.LABEL_STABILITY.uppercase(),
-                                value = uiState.timelineStability,
-                                max = 100,
-                                accentColor = ParadoxColorStabilityCyan
-                            )
-                            IosDivider()
-                            IosMetricRow(
-                                label = UiLabels.LABEL_TYRANT_INDEX.uppercase(),
-                                value = uiState.tyrantIndex,
-                                max = 100,
-                                accentColor = Color(0xFFF59E0B)
-                            )
-                            IosDivider()
-                            IosMetricRow(
-                                label = UiLabels.LABEL_SELF_TRUST.uppercase(),
-                                value = uiState.selfTrust,
-                                max = 100,
-                                accentColor = Color(0xFF38BDF8)
-                            )
-                        }
-
-                        // Section Header
-                        IosSectionHeader(title = "RECORDED CHRONOLOGY")
-
-                        // Inset Grouped Card: Chronology
-                        IosGroupedCard {
-                            IosDetailRow(
-                                label = "Current Act",
-                                value = uiState.actTitle.ifBlank { "Act I: The Consequences" }
-                            )
-                            IosDivider()
-                            IosDetailRow(
-                                label = "Active Scene",
-                                value = uiState.sceneTitle.ifBlank { "Sector 0: Breach Quarantine" }
-                            )
-                            IosDivider()
-                            IosDetailRow(
-                                label = "Acquired Relics",
-                                value = "${uiState.inventoryCount} items"
-                            )
-                        }
-
-                        // Section Header
-                        IosSectionHeader(title = "CAUSAL INTEGRITY")
-
-                        // Inset Grouped Card: Status
-                        IosGroupedCard {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 12.dp, horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
+                // 3. Animated Section Body
+                AnimatedContent(
+                    targetState = selectedTab,
+                    transitionSpec = { fadeIn() togetherWith fadeOut() },
+                    label = "SystemTabTransition"
+                ) { tab ->
+                    if (tab == 0) {
+                        // TAB 0: TIMELINE ARCHIVE CONTENT
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState()),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            if (isLandscape) {
+                                // Landscape: 2 balanced columns
                                 Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                                 ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(8.dp)
-                                            .background(ParadoxColorStabilityCyan, CircleShape)
+                                    // Column 1: Metrics
+                                    Column(
+                                        modifier = Modifier.weight(1f),
+                                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                                    ) {
+                                        IosSectionHeader(title = "TIMELINE METRICS")
+                                        IosGroupedCard {
+                                            IosMetricRow(
+                                                label = UiLabels.LABEL_STABILITY.uppercase(),
+                                                value = uiState.timelineStability,
+                                                max = 100,
+                                                accentColor = ParadoxColorStabilityCyan
+                                            )
+                                            IosDivider()
+                                            IosMetricRow(
+                                                label = UiLabels.LABEL_TYRANT_INDEX.uppercase(),
+                                                value = uiState.tyrantIndex,
+                                                max = 100,
+                                                accentColor = Color(0xFFF59E0B)
+                                            )
+                                            IosDivider()
+                                            IosMetricRow(
+                                                label = UiLabels.LABEL_SELF_TRUST.uppercase(),
+                                                value = uiState.selfTrust,
+                                                max = 100,
+                                                accentColor = Color(0xFF38BDF8)
+                                            )
+                                        }
+                                    }
+
+                                    // Column 2: Chronology & Causal Integrity
+                                    Column(
+                                        modifier = Modifier.weight(1f),
+                                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                                    ) {
+                                        IosSectionHeader(title = "RECORDED CHRONOLOGY")
+                                        IosGroupedCard {
+                                            IosDetailRow(
+                                                label = "Current Act",
+                                                value = uiState.actTitle.ifBlank { "Act I: The Consequences" }
+                                            )
+                                            IosDivider()
+                                            IosDetailRow(
+                                                label = "Active Scene",
+                                                value = uiState.sceneTitle.ifBlank { "Sector 0: Breach Quarantine" }
+                                            )
+                                            IosDivider()
+                                            IosDetailRow(
+                                                label = "Acquired Relics",
+                                                value = "${uiState.inventoryCount} items"
+                                            )
+                                        }
+
+                                        IosSectionHeader(title = "CAUSAL INTEGRITY")
+                                        IosGroupedCard {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                                ) {
+                                                    Box(
+                                                        modifier = Modifier
+                                                            .size(8.dp)
+                                                            .background(ParadoxColorStabilityCyan, CircleShape)
+                                                    )
+                                                    Text(
+                                                        text = "Continuity Status",
+                                                        style = ParadoxTypography.bodyMedium,
+                                                        color = ParadoxColorTextPrimary
+                                                    )
+                                                }
+                                                Text(
+                                                    text = if (uiState.timelineStability > 30) "SYNCHRONIZED" else "DEGRADING",
+                                                    fontSize = 12.sp,
+                                                    fontWeight = FontWeight.SemiBold,
+                                                    color = ParadoxColorStabilityCyan,
+                                                    letterSpacing = 1.sp
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                // Portrait: Vertical stack
+                                IosSectionHeader(title = "TIMELINE METRICS")
+                                IosGroupedCard {
+                                    IosMetricRow(
+                                        label = UiLabels.LABEL_STABILITY.uppercase(),
+                                        value = uiState.timelineStability,
+                                        max = 100,
+                                        accentColor = ParadoxColorStabilityCyan
                                     )
-                                    Text(
-                                        text = "Continuity Status",
-                                        style = ParadoxTypography.bodyMedium,
-                                        color = ParadoxColorTextPrimary
+                                    IosDivider()
+                                    IosMetricRow(
+                                        label = UiLabels.LABEL_TYRANT_INDEX.uppercase(),
+                                        value = uiState.tyrantIndex,
+                                        max = 100,
+                                        accentColor = Color(0xFFF59E0B)
+                                    )
+                                    IosDivider()
+                                    IosMetricRow(
+                                        label = UiLabels.LABEL_SELF_TRUST.uppercase(),
+                                        value = uiState.selfTrust,
+                                        max = 100,
+                                        accentColor = Color(0xFF38BDF8)
                                     )
                                 }
-                                Text(
-                                    text = if (uiState.timelineStability > 30) "SYNCHRONIZED" else "DEGRADING",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = ParadoxColorStabilityCyan,
-                                    letterSpacing = 1.sp
-                                )
-                            }
-                        }
 
-                        Spacer(modifier = Modifier.height(24.dp))
-                    }
-                } else {
-                    // TAB 1: PREFERENCES & SETTINGS CONTENT
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(18.dp)
-                    ) {
-                        // Section Header
-                        IosSectionHeader(title = "AUDIO & PACING")
+                                IosSectionHeader(title = "RECORDED CHRONOLOGY")
+                                IosGroupedCard {
+                                    IosDetailRow(
+                                        label = "Current Act",
+                                        value = uiState.actTitle.ifBlank { "Act I: The Consequences" }
+                                    )
+                                    IosDivider()
+                                    IosDetailRow(
+                                        label = "Active Scene",
+                                        value = uiState.sceneTitle.ifBlank { "Sector 0: Breach Quarantine" }
+                                    )
+                                    IosDivider()
+                                    IosDetailRow(
+                                        label = "Acquired Relics",
+                                        value = "${uiState.inventoryCount} items"
+                                    )
+                                }
 
-                        // Inset Grouped Card: Audio & Speed
-                        IosGroupedCard {
-                            IosSliderRow(
-                                label = "Master Audio",
-                                value = audioLevel,
-                                onValueChange = { audioLevel = it }
-                            )
-                            IosDivider()
-                            IosSliderRow(
-                                label = "Text Reveal Speed",
-                                value = textSpeed,
-                                onValueChange = { textSpeed = it }
-                            )
-                        }
-
-                        // Section Header
-                        IosSectionHeader(title = "TYPOGRAPHY & HAPTICS")
-
-                        // Inset Grouped Card: Display & Vibration
-                        IosGroupedCard {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 12.dp, horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "Text Scale",
-                                    style = ParadoxTypography.bodyMedium,
-                                    color = ParadoxColorTextPrimary
-                                )
-
-                                Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                                    listOf("S" to 13.sp, "M" to 16.sp, "L" to 19.sp).forEachIndexed { idx, (lbl, sz) ->
-                                        val isSel = textSizeIndex == idx
+                                IosSectionHeader(title = "CAUSAL INTEGRITY")
+                                IosGroupedCard {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 12.dp, horizontal = 16.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                        ) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(8.dp)
+                                                    .background(ParadoxColorStabilityCyan, CircleShape)
+                                            )
+                                            Text(
+                                                text = "Continuity Status",
+                                                style = ParadoxTypography.bodyMedium,
+                                                color = ParadoxColorTextPrimary
+                                            )
+                                        }
                                         Text(
-                                            text = lbl,
-                                            fontSize = sz,
-                                            fontWeight = if (isSel) FontWeight.Bold else FontWeight.Normal,
-                                            color = if (isSel) ParadoxColorStabilityCyan else ParadoxColorTextSecondary,
-                                            modifier = Modifier
-                                                .clickable { textSizeIndex = idx }
-                                                .padding(4.dp)
+                                            text = if (uiState.timelineStability > 30) "SYNCHRONIZED" else "DEGRADING",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = ParadoxColorStabilityCyan,
+                                            letterSpacing = 1.sp
                                         )
                                     }
                                 }
                             }
 
-                            IosDivider()
+                            Spacer(modifier = Modifier.height(24.dp))
+                        }
+                    } else {
+                        // TAB 1: PREFERENCES & SETTINGS CONTENT
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState()),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            if (isLandscape) {
+                                // Landscape: 2 balanced columns
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    // Column 1: Audio & Pacing + System Data
+                                    Column(
+                                        modifier = Modifier.weight(1f),
+                                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                                    ) {
+                                        IosSectionHeader(title = "AUDIO & PACING")
+                                        IosGroupedCard {
+                                            IosSliderRow(
+                                                label = "Master Audio",
+                                                value = audioLevel,
+                                                onValueChange = { audioLevel = it }
+                                            )
+                                            IosDivider()
+                                            IosSliderRow(
+                                                label = "Text Reveal Speed",
+                                                value = textSpeed,
+                                                onValueChange = { textSpeed = it }
+                                            )
+                                        }
 
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 10.dp, horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "Haptic Vibration",
-                                    style = ParadoxTypography.bodyMedium,
-                                    color = ParadoxColorTextPrimary
-                                )
+                                        IosSectionHeader(title = "SYSTEM DATA")
+                                        IosGroupedCard {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .clickable { }
+                                                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(
+                                                    text = "Accessibility Preferences",
+                                                    style = ParadoxTypography.bodyMedium,
+                                                    color = ParadoxColorTextPrimary
+                                                )
+                                                Text(
+                                                    text = "›",
+                                                    fontSize = 18.sp,
+                                                    color = ParadoxColorTextSecondary
+                                                )
+                                            }
 
-                                Switch(
-                                    checked = vibrationEnabled,
-                                    onCheckedChange = { vibrationEnabled = it },
-                                    colors = SwitchDefaults.colors(
-                                        checkedThumbColor = ParadoxColorStabilityCyan,
-                                        checkedTrackColor = Color(0x3300E5FF),
-                                        uncheckedThumbColor = ParadoxColorTextSecondary,
-                                        uncheckedTrackColor = Color(0x14FFFFFF)
+                                            IosDivider()
+
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .clickable { }
+                                                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(
+                                                    text = "Reset Timeline Data",
+                                                    style = ParadoxTypography.bodyMedium,
+                                                    color = Color(0xFFFF5252)
+                                                )
+                                                Text(
+                                                    text = "›",
+                                                    fontSize = 18.sp,
+                                                    color = Color(0xFFFF5252)
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    // Column 2: Typography & Haptics
+                                    Column(
+                                        modifier = Modifier.weight(1f),
+                                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                                    ) {
+                                        IosSectionHeader(title = "TYPOGRAPHY & HAPTICS")
+                                        IosGroupedCard {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(
+                                                    text = "Text Scale",
+                                                    style = ParadoxTypography.bodyMedium,
+                                                    color = ParadoxColorTextPrimary
+                                                )
+
+                                                Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                                                    listOf("S" to 13.sp, "M" to 16.sp, "L" to 19.sp).forEachIndexed { idx, (lbl, sz) ->
+                                                        val isSel = textSizeIndex == idx
+                                                        Text(
+                                                            text = lbl,
+                                                            fontSize = sz,
+                                                            fontWeight = if (isSel) FontWeight.Bold else FontWeight.Normal,
+                                                            color = if (isSel) ParadoxColorStabilityCyan else ParadoxColorTextSecondary,
+                                                            modifier = Modifier
+                                                                .clickable { textSizeIndex = idx }
+                                                                .padding(4.dp)
+                                                        )
+                                                    }
+                                                }
+                                            }
+
+                                            IosDivider()
+
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(vertical = 10.dp, horizontal = 16.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(
+                                                    text = "Haptic Vibration",
+                                                    style = ParadoxTypography.bodyMedium,
+                                                    color = ParadoxColorTextPrimary
+                                                )
+
+                                                Switch(
+                                                    checked = vibrationEnabled,
+                                                    onCheckedChange = { vibrationEnabled = it },
+                                                    colors = SwitchDefaults.colors(
+                                                        checkedThumbColor = ParadoxColorStabilityCyan,
+                                                        checkedTrackColor = Color(0x3300E5FF),
+                                                        uncheckedThumbColor = ParadoxColorTextSecondary,
+                                                        uncheckedTrackColor = Color(0x14FFFFFF)
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                // Portrait: Vertical stack
+                                IosSectionHeader(title = "AUDIO & PACING")
+                                IosGroupedCard {
+                                    IosSliderRow(
+                                        label = "Master Audio",
+                                        value = audioLevel,
+                                        onValueChange = { audioLevel = it }
                                     )
-                                )
+                                    IosDivider()
+                                    IosSliderRow(
+                                        label = "Text Reveal Speed",
+                                        value = textSpeed,
+                                        onValueChange = { textSpeed = it }
+                                    )
+                                }
+
+                                IosSectionHeader(title = "TYPOGRAPHY & HAPTICS")
+                                IosGroupedCard {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 12.dp, horizontal = 16.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "Text Scale",
+                                            style = ParadoxTypography.bodyMedium,
+                                            color = ParadoxColorTextPrimary
+                                        )
+
+                                        Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                                            listOf("S" to 13.sp, "M" to 16.sp, "L" to 19.sp).forEachIndexed { idx, (lbl, sz) ->
+                                                val isSel = textSizeIndex == idx
+                                                Text(
+                                                    text = lbl,
+                                                    fontSize = sz,
+                                                    fontWeight = if (isSel) FontWeight.Bold else FontWeight.Normal,
+                                                    color = if (isSel) ParadoxColorStabilityCyan else ParadoxColorTextSecondary,
+                                                    modifier = Modifier
+                                                        .clickable { textSizeIndex = idx }
+                                                        .padding(4.dp)
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    IosDivider()
+
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 10.dp, horizontal = 16.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "Haptic Vibration",
+                                            style = ParadoxTypography.bodyMedium,
+                                            color = ParadoxColorTextPrimary
+                                        )
+
+                                        Switch(
+                                            checked = vibrationEnabled,
+                                            onCheckedChange = { vibrationEnabled = it },
+                                            colors = SwitchDefaults.colors(
+                                                checkedThumbColor = ParadoxColorStabilityCyan,
+                                                checkedTrackColor = Color(0x3300E5FF),
+                                                uncheckedThumbColor = ParadoxColorTextSecondary,
+                                                uncheckedTrackColor = Color(0x14FFFFFF)
+                                            )
+                                        )
+                                    }
+                                }
+
+                                IosSectionHeader(title = "SYSTEM DATA")
+                                IosGroupedCard {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable { }
+                                            .padding(vertical = 14.dp, horizontal = 16.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "Accessibility Preferences",
+                                            style = ParadoxTypography.bodyMedium,
+                                            color = ParadoxColorTextPrimary
+                                        )
+                                        Text(
+                                            text = "›",
+                                            fontSize = 18.sp,
+                                            color = ParadoxColorTextSecondary
+                                        )
+                                    }
+
+                                    IosDivider()
+
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable { }
+                                            .padding(vertical = 14.dp, horizontal = 16.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "Reset Timeline Data",
+                                            style = ParadoxTypography.bodyMedium,
+                                            color = Color(0xFFFF5252)
+                                        )
+                                        Text(
+                                            text = "›",
+                                            fontSize = 18.sp,
+                                            color = Color(0xFFFF5252)
+                                        )
+                                    }
+                                }
                             }
+
+                            Spacer(modifier = Modifier.height(24.dp))
                         }
-
-                        // Section Header
-                        IosSectionHeader(title = "SYSTEM DATA")
-
-                        // Inset Grouped Card: Data
-                        IosGroupedCard {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { }
-                                    .padding(vertical = 14.dp, horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "Accessibility Preferences",
-                                    style = ParadoxTypography.bodyMedium,
-                                    color = ParadoxColorTextPrimary
-                                )
-                                Text(
-                                    text = "›",
-                                    fontSize = 18.sp,
-                                    color = ParadoxColorTextSecondary
-                                )
-                            }
-
-                            IosDivider()
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { }
-                                    .padding(vertical = 14.dp, horizontal = 16.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "Reset Timeline Data",
-                                    style = ParadoxTypography.bodyMedium,
-                                    color = Color(0xFFFF5252)
-                                )
-                                Text(
-                                    text = "›",
-                                    fontSize = 18.sp,
-                                    color = Color(0xFFFF5252)
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(24.dp))
                     }
                 }
             }

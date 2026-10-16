@@ -97,7 +97,7 @@ fun ChoiceItem(
                 style = ParadoxTypography.labelLarge,
                 color = if (isAvailable) ParadoxColorTextPrimary else ParadoxColorTextMuted,
                 textAlign = TextAlign.Start,
-                modifier = Modifier.weight(1f, fill = false)
+                modifier = Modifier.weight(1f)
             )
 
             if (!isAvailable) {

@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -86,7 +87,7 @@ fun StoryScreen(
         modifier = modifier
             .fillMaxSize()
             .background(ParadoxColorBackground)
-            .statusBarsPadding()
+            .safeDrawingPadding()
     ) {
         if (uiState.isLoading) {
             Box(
@@ -109,34 +110,40 @@ fun StoryScreen(
                 onContinue = onAcknowledgeTimelineChange
             )
         } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.TopCenter
             ) {
-                // 1. Act and Scene Context Header
-                StoryHeader(
-                    actTitle = uiState.actTitle,
-                    sceneTitle = uiState.sceneTitle
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .widthIn(max = 760.dp)
+                        .verticalScroll(scrollState)
+                ) {
+                    // 1. Act and Scene Context Header
+                    StoryHeader(
+                        actTitle = uiState.actTitle,
+                        sceneTitle = uiState.sceneTitle
+                    )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                // 2. Prose and Dialogue Passages
-                NarrativeContent(
-                    dialogues = uiState.dialogues
-                )
+                    // 2. Prose and Dialogue Passages
+                    NarrativeContent(
+                        dialogues = uiState.dialogues
+                    )
 
-                Spacer(modifier = Modifier.height(36.dp))
+                    Spacer(modifier = Modifier.height(36.dp))
 
-                // 3. Interactive Choice Junctures
-                ChoiceList(
-                    choices = uiState.choices,
-                    onChoiceSelected = onChoiceSelected
-                )
+                    // 3. Interactive Choice Junctures
+                    ChoiceList(
+                        choices = uiState.choices,
+                        onChoiceSelected = onChoiceSelected
+                    )
 
-                // Bottom padding to ensure comfortable breathing room
-                Spacer(modifier = Modifier.height(48.dp))
+                    // Bottom padding to ensure comfortable breathing room
+                    Spacer(modifier = Modifier.height(48.dp))
+                }
             }
         }
 

@@ -6,19 +6,23 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -89,6 +94,9 @@ fun MainMenuScreen(
     val cameraZoom = 1.0f + progress * 0.12f
     val cameraPanY = -progress * 15f
 
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     Box(modifier = modifier.fillMaxSize()) {
         // Single Background Image: Crisp, sharp, and buttery smooth
         Image(
@@ -120,71 +128,147 @@ fun MainMenuScreen(
                 )
         )
 
-        // Screen content
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 28.dp, vertical = 48.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Spacer(modifier = Modifier.weight(0.8f))
-
-            // Brand Header: Luminous Emblem + Title
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+        // Screen content - Responsive for Landscape and Portrait
+        if (isLandscape) {
+            // Landscape layout: Split 2-column view
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .safeDrawingPadding()
+                    .padding(horizontal = 32.dp, vertical = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_paradox_emblem),
-                    contentDescription = UiLabels.LABEL_PARADOX_LOG,
-                    modifier = Modifier.size(96.dp)
-                )
+                // Left Column: Brand Emblem + Title
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_paradox_emblem),
+                        contentDescription = UiLabels.LABEL_PARADOX_LOG,
+                        modifier = Modifier.size(80.dp)
+                    )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(14.dp))
 
-                Text(
-                    text = UiLabels.LABEL_PARADOX_LOG,
-                    color = ParadoxColorTextPrimary,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = FontFamily.Serif,
-                    letterSpacing = 5.sp
-                )
+                    Text(
+                        text = UiLabels.LABEL_PARADOX_LOG,
+                        color = ParadoxColorTextPrimary,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = FontFamily.Serif,
+                        letterSpacing = 4.5.sp
+                    )
+                }
+
+                // Right Column: Centered Action Buttons
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .widthIn(max = 340.dp)
+                            .padding(horizontal = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        MenuActionButton(
+                            text = UiLabels.LABEL_CONTINUE,
+                            isHighlighted = true,
+                            onClick = onContinueGame
+                        )
+
+                        MenuActionButton(
+                            text = UiLabels.LABEL_NEW_GAME,
+                            isHighlighted = false,
+                            onClick = onNewGame
+                        )
+
+                        MenuActionButton(
+                            text = UiLabels.LABEL_SYSTEM_ARCHIVES,
+                            isHighlighted = false,
+                            onClick = onOpenSystem
+                        )
+                    }
+                }
             }
-
-            Spacer(modifier = Modifier.weight(1.2f))
-
-            // Action Buttons: Compact iOS-style translucent controls
+        } else {
+            // Portrait layout: Elegant vertical hierarchy
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .fillMaxSize()
+                    .safeDrawingPadding()
+                    .padding(horizontal = 28.dp, vertical = 36.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                // Primary action: CONTINUE (Glowing Cyan Glass Highlight)
-                MenuActionButton(
-                    text = UiLabels.LABEL_CONTINUE,
-                    isHighlighted = true,
-                    onClick = onContinueGame
-                )
+                Spacer(modifier = Modifier.weight(0.8f))
 
-                // Secondary action: NEW GAME (Translucent Frost Glass)
-                MenuActionButton(
-                    text = UiLabels.LABEL_NEW_GAME,
-                    isHighlighted = false,
-                    onClick = onNewGame
-                )
+                // Brand Header: Luminous Emblem + Title
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_paradox_emblem),
+                        contentDescription = UiLabels.LABEL_PARADOX_LOG,
+                        modifier = Modifier.size(96.dp)
+                    )
 
-                // Tertiary action: Unified SYSTEM & ARCHIVES option box
-                MenuActionButton(
-                    text = UiLabels.LABEL_SYSTEM_ARCHIVES,
-                    isHighlighted = false,
-                    onClick = onOpenSystem
-                )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = UiLabels.LABEL_PARADOX_LOG,
+                        color = ParadoxColorTextPrimary,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = FontFamily.Serif,
+                        letterSpacing = 5.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.weight(1.2f))
+
+                // Action Buttons: Compact iOS-style translucent controls with bounded max width
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .widthIn(max = 380.dp)
+                        .padding(horizontal = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    // Primary action: CONTINUE (Glowing Cyan Glass Highlight)
+                    MenuActionButton(
+                        text = UiLabels.LABEL_CONTINUE,
+                        isHighlighted = true,
+                        onClick = onContinueGame
+                    )
+
+                    // Secondary action: NEW GAME (Translucent Frost Glass)
+                    MenuActionButton(
+                        text = UiLabels.LABEL_NEW_GAME,
+                        isHighlighted = false,
+                        onClick = onNewGame
+                    )
+
+                    // Tertiary action: Unified SYSTEM & ARCHIVES option box
+                    MenuActionButton(
+                        text = UiLabels.LABEL_SYSTEM_ARCHIVES,
+                        isHighlighted = false,
+                        onClick = onOpenSystem
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

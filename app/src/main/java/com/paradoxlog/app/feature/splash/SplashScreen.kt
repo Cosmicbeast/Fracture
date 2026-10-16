@@ -34,6 +34,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.ui.platform.LocalConfiguration
 import com.paradoxlog.app.R
 import com.paradoxlog.app.core.constants.UiLabels
 import com.paradoxlog.app.core.designsystem.ParadoxColorStabilityCyan
@@ -73,6 +76,9 @@ fun SplashScreen(
         onNavigateToMainMenu()
     }
 
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -110,7 +116,11 @@ fun SplashScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 64.dp),
+                .safeDrawingPadding()
+                .padding(
+                    horizontal = if (isLandscape) 36.dp else 24.dp,
+                    vertical = if (isLandscape) 20.dp else 40.dp
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
@@ -121,20 +131,20 @@ fun SplashScreen(
                 painter = painterResource(id = R.drawable.ic_paradox_emblem),
                 contentDescription = UiLabels.LABEL_PARADOX_LOG,
                 modifier = Modifier
-                    .size(92.dp)
+                    .size(if (isLandscape) 68.dp else 92.dp)
                     .alpha(emblemAlpha)
             )
 
-            Spacer(modifier = Modifier.height(28.dp))
+            Spacer(modifier = Modifier.height(if (isLandscape) 14.dp else 24.dp))
 
             // Cinematic Title
             Text(
                 text = UiLabels.LABEL_PARADOX_LOG,
                 color = ParadoxColorTextPrimary,
-                fontSize = 28.sp,
+                fontSize = if (isLandscape) 24.sp else 28.sp,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = FontFamily.Serif,
-                letterSpacing = 6.sp
+                letterSpacing = if (isLandscape) 5.sp else 6.sp
             )
 
             Spacer(modifier = Modifier.weight(1.2f))
@@ -143,10 +153,10 @@ fun SplashScreen(
             Text(
                 text = UiLabels.LABEL_TIME_REMEMBERS,
                 color = ParadoxColorStabilityCyan.copy(alpha = 0.85f),
-                fontSize = 12.sp,
+                fontSize = if (isLandscape) 11.sp else 12.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = FontFamily.SansSerif,
-                letterSpacing = 4.sp
+                letterSpacing = if (isLandscape) 3.sp else 4.sp
             )
         }
     }

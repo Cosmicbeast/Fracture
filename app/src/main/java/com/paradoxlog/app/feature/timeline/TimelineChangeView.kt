@@ -1,5 +1,6 @@
 package com.paradoxlog.app.feature.timeline
 
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,13 +14,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -54,105 +60,123 @@ fun TimelineChangeView(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     Surface(
         color = ParadoxColorBackground,
         modifier = modifier.fillMaxSize()
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .safeDrawingPadding(),
+            contentAlignment = Alignment.Center
         ) {
-            Spacer(modifier = Modifier.weight(1f))
-
-            // 1. Timeline Change Header
-            Text(
-                text = UiLabels.LABEL_TIMELINE_UPDATED,
-                color = ParadoxColorStabilityCyan,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = FontFamily.SansSerif,
-                letterSpacing = 2.sp,
-                textAlign = TextAlign.Center
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // 2. Authoritative Timeline Information Block
             Column(
                 modifier = Modifier
-                    .fillMaxWidth(0.85f)
-                    .padding(vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                if (timelineChange.actId.isNotBlank()) {
-                    TimelineInfoRow(
-                        label = UiLabels.LABEL_CURRENT_ACT,
-                        value = timelineChange.actId.uppercase()
-                    )
-                }
-
-                if (timelineChange.sceneId.isNotBlank()) {
-                    TimelineInfoRow(
-                        label = UiLabels.LABEL_CURRENT_SCENE,
-                        value = timelineChange.sceneId.uppercase()
-                    )
-                }
-
-                if (!timelineChange.recordedDecisionChoiceId.isNullOrBlank()) {
-                    TimelineInfoRow(
-                        label = UiLabels.LABEL_DECISION_RECORDED,
-                        value = timelineChange.recordedDecisionChoiceId
-                    )
-                }
-
-                if (timelineChange.totalVisitedScenesCount > 0) {
-                    TimelineInfoRow(
-                        label = UiLabels.LABEL_TIMELINE_NODES,
-                        value = "${timelineChange.totalVisitedScenesCount}"
-                    )
-                }
-
-                if (timelineChange.timelineStability != null) {
-                    TimelineInfoRow(
-                        label = UiLabels.LABEL_STABILITY,
-                        value = "${timelineChange.timelineStability}%"
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // 3. Continue Action Button
-            Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = ParadoxColorSurface,
-                border = BorderStroke(1.dp, ParadoxColorBorder),
-                modifier = Modifier
                     .fillMaxWidth()
-                    .defaultMinSize(minHeight = 56.dp)
-                    .semantics { role = Role.Button }
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null,
-                        onClick = onContinue
+                    .widthIn(max = 620.dp)
+                    .padding(
+                        horizontal = if (isLandscape) 32.dp else 24.dp,
+                        vertical = if (isLandscape) 16.dp else 28.dp
                     )
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Box(
+                Spacer(modifier = Modifier.height(if (isLandscape) 8.dp else 20.dp))
+
+                // 1. Timeline Change Header
+                Text(
+                    text = UiLabels.LABEL_TIMELINE_UPDATED,
+                    color = ParadoxColorStabilityCyan,
+                    fontSize = if (isLandscape) 12.sp else 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = FontFamily.SansSerif,
+                    letterSpacing = 2.sp,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(if (isLandscape) 16.dp else 28.dp))
+
+                // 2. Authoritative Timeline Information Block
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isLandscape) 0.92f else 0.85f)
+                        .padding(vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(if (isLandscape) 10.dp else 16.dp)
+                ) {
+                    if (timelineChange.actId.isNotBlank()) {
+                        TimelineInfoRow(
+                            label = UiLabels.LABEL_CURRENT_ACT,
+                            value = timelineChange.actId.uppercase()
+                        )
+                    }
+
+                    if (timelineChange.sceneId.isNotBlank()) {
+                        TimelineInfoRow(
+                            label = UiLabels.LABEL_CURRENT_SCENE,
+                            value = timelineChange.sceneId.uppercase()
+                        )
+                    }
+
+                    if (!timelineChange.recordedDecisionChoiceId.isNullOrBlank()) {
+                        TimelineInfoRow(
+                            label = UiLabels.LABEL_DECISION_RECORDED,
+                            value = timelineChange.recordedDecisionChoiceId
+                        )
+                    }
+
+                    if (timelineChange.totalVisitedScenesCount > 0) {
+                        TimelineInfoRow(
+                            label = UiLabels.LABEL_TIMELINE_NODES,
+                            value = "${timelineChange.totalVisitedScenesCount}"
+                        )
+                    }
+
+                    if (timelineChange.timelineStability != null) {
+                        TimelineInfoRow(
+                            label = UiLabels.LABEL_STABILITY,
+                            value = "${timelineChange.timelineStability}%"
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(if (isLandscape) 16.dp else 28.dp))
+
+                // 3. Continue Action Button
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = ParadoxColorSurface,
+                    border = BorderStroke(1.dp, ParadoxColorBorder),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    contentAlignment = Alignment.Center
+                        .widthIn(max = 380.dp)
+                        .defaultMinSize(minHeight = 52.dp)
+                        .semantics { role = Role.Button }
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null,
+                            onClick = onContinue
+                        )
                 ) {
-                    Text(
-                        text = UiLabels.LABEL_CONTINUE,
-                        style = ParadoxTypography.labelLarge,
-                        color = ParadoxColorTextPrimary,
-                        letterSpacing = 1.2.sp
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 14.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = UiLabels.LABEL_CONTINUE,
+                            style = ParadoxTypography.labelLarge,
+                            color = ParadoxColorTextPrimary,
+                            letterSpacing = 1.2.sp
+                        )
+                    }
                 }
+
+                Spacer(modifier = Modifier.height(if (isLandscape) 8.dp else 16.dp))
             }
         }
     }

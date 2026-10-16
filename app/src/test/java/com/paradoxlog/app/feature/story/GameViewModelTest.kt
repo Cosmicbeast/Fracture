@@ -2,6 +2,7 @@ package com.paradoxlog.app.feature.story
 
 import com.paradoxlog.app.domain.model.Act
 import com.paradoxlog.app.domain.model.Choice
+import com.paradoxlog.app.domain.model.ChoiceConsequence
 import com.paradoxlog.app.domain.model.Dialogue
 import com.paradoxlog.app.domain.model.Item
 import com.paradoxlog.app.domain.model.Scene
